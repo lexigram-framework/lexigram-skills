@@ -5,6 +5,7 @@
 LEXIGRAM_DIR := ../lexigram
 PYTHON      := python3
 SKILLS      := $(wildcard */SKILL.md)
+DOCS_SRC    := /home/admin/Documents/AI/applications/framework/lexigram-docs/src/content/docs
 
 .DEFAULT_GOAL := help
 
@@ -14,8 +15,8 @@ help:  ## Show this help
 	  awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: prepare
-prepare:  ## Validate and prepare skills for publish
-	$(PYTHON) scripts/prepare-skills.py
+prepare:  ## Validate, cross-reference docs + REF files
+	$(PYTHON) scripts/prepare-skills.py --docs $(DOCS_SRC) --refs
 
 .PHONY: publish
 publish: prepare  ## Validate, commit, push. Usage: make publish m="commit message"
@@ -115,7 +116,7 @@ new:  ## Scaffold a new skill: make new SKILL=my-skill-name
 .PHONY: from-docs
 from-docs:  ## Show doc-to-skill mapping from lexigram-docs
 	@echo "=== Documentation sources for skills ==="
-	@for skill in ai-subsystem-quickstart caching-patterns configuration-management creating-providers-and-modules database-repository-pattern events-and-messaging resilience-patterns testing-with-lexigram using-cli-and-generators using-result-and-error-codes web-controllers-and-routing; do \
+	@for skill in ai-subsystem-quickstart caching-patterns cli-code-generation cli-config-and-inspect cli-database-operations cli-project-scaffolding configuration-management creating-providers-and-modules database-repository-pattern events-and-messaging resilience-patterns testing-with-lexigram using-result-and-error-codes web-controllers-and-routing; do \
 	  echo ""; \
 	  echo "--- $$skill ---"; \
 	  case "$$skill" in \
@@ -127,7 +128,10 @@ from-docs:  ## Show doc-to-skill mapping from lexigram-docs
 	    events-and-messaging)            echo "  sources:"; ls $(LEXIGRAM_DIR)/docs/lexigram-docs/guides/event-driven.md $(LEXIGRAM_DIR)/docs/lexigram-docs/guides/queue.md 2>/dev/null;; \
 	    resilience-patterns)             echo "  sources:"; ls $(LEXIGRAM_DIR)/docs/lexigram-docs/guides/resilience.md 2>/dev/null;; \
 	    testing-with-lexigram)           echo "  sources:"; ls $(LEXIGRAM_DIR)/docs/lexigram-docs/guides/testing.md 2>/dev/null;; \
-	    using-cli-and-generators)        echo "  sources:"; ls $(LEXIGRAM_DIR)/docs/lexigram-docs/guides/cli.md $(LEXIGRAM_DIR)/docs/lexigram-docs/reference/REF_CLI_COMMANDS.md 2>/dev/null;; \
+	    cli-project-scaffolding)         echo "  sources:"; ls $(LEXIGRAM_DIR)/docs/lexigram-docs/guides/cli.md 2>/dev/null;; \
+	    cli-code-generation)             echo "  sources:"; ls $(LEXIGRAM_DIR)/docs/lexigram-docs/reference/REF_CLI_COMMANDS.md 2>/dev/null;; \
+	    cli-database-operations)         echo "  sources:"; ls $(LEXIGRAM_DIR)/docs/lexigram-docs/guides/database.md $(LEXIGRAM_DIR)/docs/lexigram-docs/guides/cli.md 2>/dev/null;; \
+	    cli-config-and-inspect)          echo "  sources:"; ls $(LEXIGRAM_DIR)/docs/lexigram-docs/fundamentals/yaml-configuration.md $(LEXIGRAM_DIR)/docs/lexigram-docs/guides/cli.md 2>/dev/null;; \
 	    using-result-and-error-codes)    echo "  sources:"; ls $(LEXIGRAM_DIR)/docs/lexigram-docs/fundamentals/result-pattern.md $(LEXIGRAM_DIR)/docs/lexigram-docs/reference/REF_ERROR_CODES.md 2>/dev/null;; \
 	    web-controllers-and-routing)     echo "  sources:"; ls $(LEXIGRAM_DIR)/docs/lexigram-docs/fundamentals/architecture.md 2>/dev/null;; \
 	  esac; \

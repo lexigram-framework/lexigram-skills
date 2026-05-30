@@ -100,17 +100,18 @@ LEX_ERR_AGT_001 AgentError           LEX_ERR_AGT_004 AgentConfigurationError(Age
 
 ```python
 # In lexigram-contracts for shared exceptions
-LEX_ERR_MYDOM_001 = "LEX_ERR_MYDOM_001"
+# Use an unused code from the domain's range (see REF_ERROR_CODES.md for gaps)
+LEX_ERR_CACHE_012 = "LEX_ERR_CACHE_012"
 
-class MyDomainError(DomainError):
-    _code = LEX_ERR_MYDOM_001
-    """Base for my domain."""
+class CacheCustomError(CacheError):
+    _code = LEX_ERR_CACHE_012
+    """Custom cache error."""
 
 # In extension packages for leaf exceptions
-LEX_ERR_MYDOM_002 = "LEX_ERR_MYDOM_002"
+LEX_ERR_CACHE_013 = "LEX_ERR_CACHE_013"
 
-class MySpecificError(MyDomainError):
-    _code = LEX_ERR_MYDOM_002
+class CacheSpecificError(CacheCustomError):
+    _code = LEX_ERR_CACHE_013
     """Specific failure scenario."""
 ```
 
