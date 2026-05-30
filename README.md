@@ -14,14 +14,6 @@ Add to your project's `opencode.json`:
 
 Or install globally in `~/.config/opencode/opencode.json`. Restart opencode, then skills are discoverable via the `skill` tool.
 
-### Local Development
-
-```json
-{
-  "skills": {"paths": ["/path/to/lexigram-skills"]}
-}
-```
-
 ## Skills
 
 ### AI
@@ -67,18 +59,6 @@ Or install globally in `~/.config/opencode/opencode.json`. Restart opencode, the
 | Skill | Description |
 |-------|-------------|
 | `testing-with-lexigram` | TestEnvironment, module stubs, fakes |
-
-## Development
-
-```bash
-make validate      # Validate skill frontmatter
-make stats         # Word counts per skill
-make prepare       # Full validation + cross-reference against lexigram-docs
-make new SKILL=x   # Scaffold a new skill
-make publish m="msg"  # Validate, commit, push
-```
-
-Skills are authored following the [opencode skill spec](https://agentskills.io/specification). Each skill has YAML frontmatter with `name` and `description: Use when...`.
 
 ## Repositories
 
