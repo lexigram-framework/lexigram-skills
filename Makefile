@@ -1,8 +1,8 @@
 # Lexigram Skills — Makefile
 # Manages opencode skills for the Lexigram framework.
+# Publish workflow mirrors lexigram-docs/Makefile.
 
 LEXIGRAM_DIR := ../lexigram
-UV          := uv
 PYTHON      := python3
 SKILLS      := $(wildcard */SKILL.md)
 
@@ -13,8 +13,19 @@ help:  ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
 	  awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
 
+.PHONY: prepare
+prepare:  ## Validate and prepare skills for publish
+	$(PYTHON) scripts/prepare-skills.py
+
+.PHONY: publish
+publish: prepare  ## Validate, commit, push. Usage: make publish m="commit message"
+	@if [ -z "$(m)" ]; then echo "ERROR: m=\"commit message\" is required"; exit 1; fi
+	git add -A
+	git commit -m "$(m)"
+	git push
+
 .PHONY: validate
-validate:  ## Validate all skill frontmatter
+validate:  ## Validate all skill frontmatter (shell, fast)
 	@echo "=== Validating skills ==="
 	@errors=0; \
 	for f in $(SKILLS); do \
@@ -45,22 +56,11 @@ stats:  ## Show word counts per skill
 	printf "%-40s %6d\n" "" "------"; \
 	printf "%-40s %6d\n" "TOTAL" $$total
 
-.PHONY: refs
-refs:  ## Regenerate REF_* files from lexigram source
-	@echo "=== Regenerating reference catalogs ==="
-	$(UV) run python $(LEXIGRAM_DIR)/scripts/catalogs/generate_cli_commands_catalog.py
-	@echo "  → REF_CLI_COMMANDS.md"
-	$(UV) run python $(LEXIGRAM_DIR)/scripts/catalogs/generate_env_vars_catalog.py
-	@echo "  → REF_ENV_VARS.md"
-	$(UV) run python $(LEXIGRAM_DIR)/scripts/catalogs/generate_error_catalog.py
-	@echo "  → REF_ERROR_CODES.md"
-	@echo "Done."
-
 .PHONY: check
-check: validate stats  ## Run all validation + stats
+check: prepare  ## Run full prep (alias for prepare)
 
 .PHONY: lint
-lint:  ## Check skills follow opencode skill conventions
+lint:  ## Quick lint checks (name conventions, word counts)
 	@echo "=== Lint checks ==="
 	@errors=0; \
 	for f in $(SKILLS); do \
