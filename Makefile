@@ -1,11 +1,12 @@
-# Lexigram Skills — Makefile
-# Manages opencode skills for the Lexigram framework.
+# lexigram-skills — Makefile
+# Manages skill files for AI coding agents (Claude Code, OpenCode, …)
+# that teach the agent how to build with the Lexigram framework.
 # Publish workflow mirrors lexigram-docs/Makefile.
 
-LEXIGRAM_DIR := ../lexigram
-PYTHON      := python3
-SKILLS      := $(wildcard */SKILL.md)
-DOCS_SRC    := /home/admin/Documents/AI/applications/framework/lexigram-docs/src/content/docs
+LEXIGRAM_DIR ?= ../lexigram
+DOCS_SRC     ?= ../lexigram-docs/src/content/docs
+PYTHON       := python3
+SKILLS       := $(wildcard */SKILL.md)
 
 .DEFAULT_GOAL := help
 
@@ -21,7 +22,8 @@ prepare:  ## Validate, cross-reference docs + REF files
 .PHONY: publish
 publish: prepare  ## Validate, commit, push. Usage: make publish m="commit message"
 	@if [ -z "$(m)" ]; then echo "ERROR: m=\"commit message\" is required"; exit 1; fi
-	git add -A
+	@# Stage only the things this repo owns — never -A (would sweep up any unrelated dirty files)
+	git add README.md Makefile .opencode/INSTALL.md scripts/ */SKILL.md
 	git commit -m "$(m)"
 	git push
 
