@@ -22,8 +22,13 @@ prepare:  ## Validate, cross-reference docs + REF files
 .PHONY: publish
 publish: prepare  ## Validate, commit, push. Usage: make publish m="commit message"
 	@if [ -z "$(m)" ]; then echo "ERROR: m=\"commit message\" is required"; exit 1; fi
-	@# Stage only the things this repo owns — never -A (would sweep up any unrelated dirty files)
-	git add README.md Makefile .opencode/INSTALL.md scripts/ */SKILL.md
+	@# Stage only the things this repo tracks. Never -A (would sweep up unrelated
+	@# dirty files), and never scripts/ (that directory is gitignored — see .gitignore).
+	git add README.md Makefile .opencode/INSTALL.md */SKILL.md
+	@if git diff --cached --quiet; then \
+	  echo "Nothing to publish — no tracked files changed."; \
+	  exit 0; \
+	fi
 	git commit -m "$(m)"
 	git push
 
