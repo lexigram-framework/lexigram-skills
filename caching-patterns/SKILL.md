@@ -57,7 +57,7 @@ await self.cache.get_or_compute(
 
 ## Key Prefixing
 
-```python
+```yaml
 # Backend handles prefix automatically from config
 cache:
   backend: redis

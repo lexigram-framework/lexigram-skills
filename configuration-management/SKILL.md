@@ -41,15 +41,15 @@ cache:
 ## Environment Variable Overrides
 
 ```bash
-# LEX_<SECTION>__<FIELD> syntax
-LEX_DB__URL=postgresql+asyncpg://prod:pass@host:5432/db
+# LEX_<PACKAGE>__<FIELD> syntax — each extension declares its own prefix
+LEX_SQL__BACKEND__URL=postgresql+asyncpg://prod:pass@host:5432/db
 LEX_CACHE__BACKEND=redis
 LEX_APP__DEBUG=true
 ```
 
 Nested sections use double underscore:
 ```bash
-LEX_DB__POOL__MAX_SIZE=20
+LEX_SQL__POOL__MAX_SIZE=20
 LEX_AI_LLM__PROVIDER=anthropic
 ```
 
