@@ -8,7 +8,11 @@ These are skill files for AI coding agents — Claude Code, OpenCode, and friend
 
 ## install
 
-For OpenCode, add to your project's `opencode.json`:
+Pick the agent you use. The skills are plain markdown — any tool that reads markdown context can use them; the recipes below are the smoothest paths for the popular ones.
+
+### OpenCode
+
+Project-scoped — add to your `opencode.json`:
 
 ```json
 {
@@ -16,9 +20,66 @@ For OpenCode, add to your project's `opencode.json`:
 }
 ```
 
-Or install globally in `~/.config/opencode/opencode.json`. Restart the agent; skills become discoverable via the `skill` tool.
+Globally — put the same `plugin` entry in `~/.config/opencode/opencode.json`. Restart the agent; skills become discoverable via the `skill` tool.
 
-For Claude Code, point its skills directory at this repo, or copy the folders you want into `~/.claude/skills/`.
+### Claude Code
+
+Symlink (recommended — stays in sync with upstream):
+
+```bash
+git clone https://github.com/lexigram-framework/lexigram-skills.git ~/.lexigram-skills
+ln -s ~/.lexigram-skills ~/.claude/skills/lexigram
+```
+
+Or copy a snapshot (no auto-update; good for pinning):
+
+```bash
+git clone --depth 1 https://github.com/lexigram-framework/lexigram-skills.git
+cp -r lexigram-skills/*/ ~/.claude/skills/
+```
+
+Restart Claude Code; the agent will discover skills via its standard skill loader.
+
+### Cursor
+
+Cursor reads `*.md` files from project rules and from `~/.cursor/rules/`. Either:
+
+```bash
+git submodule add https://github.com/lexigram-framework/lexigram-skills.git .cursor/rules/lexigram
+```
+
+…or copy the specific `SKILL.md` files you want into `.cursor/rules/`. Cursor surfaces them to the model as ambient context; reference them by name in your prompt to bias the model toward them.
+
+### Continue.dev, Cline, Aider, and other markdown-aware agents
+
+Anything that consumes a project-level instructions directory can use these skills directly:
+
+```bash
+git clone https://github.com/lexigram-framework/lexigram-skills.git
+# point your agent's "rules" or "instructions" path at the cloned directory,
+# or symlink individual SKILL.md files into your agent's expected location.
+```
+
+### Cherry-pick a single skill
+
+If you only need one — say `ai-subsystem-quickstart` — copy just that folder:
+
+```bash
+curl -sL https://github.com/lexigram-framework/lexigram-skills/archive/main.tar.gz \
+  | tar -xzf - --strip-components=1 lexigram-skills-main/ai-subsystem-quickstart
+```
+
+Drop the resulting folder into your agent's skills directory.
+
+### Pin a version
+
+For reproducible setups, pin to a tag or commit instead of `main`:
+
+```bash
+git clone --branch v0.1.0 --depth 1 https://github.com/lexigram-framework/lexigram-skills.git
+```
+
+(Replace the tag with whatever the current release is — see [releases](https://github.com/lexigram-framework/lexigram-skills/releases).)
 
 ## what's in the box
 
