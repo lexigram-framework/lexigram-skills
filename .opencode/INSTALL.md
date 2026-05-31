@@ -1,6 +1,6 @@
-# Lexigram Skills
+# lexigram skills
 
-Opencode skills for the [Lexigram framework](https://github.com/lexigram-framework/lexigram-dev).
+Skill files for AI coding agents (Claude Code, OpenCode, and friends) that teach the agent how to build with the [Lexigram framework](https://github.com/lexigram-framework/lexigram). Not a python package — see this repo's `README.md` for the full explanation.
 
 ## Installation
 
